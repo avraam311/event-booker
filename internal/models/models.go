@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type EventDTO struct {
 	Name        string `json:"name" validate:"required"`
 	SeatsNumber uint   `json:"seat_number" validate:"required"`
@@ -13,4 +15,10 @@ type EventDB struct {
 	ID              uint   `json:"id" validate:"required"`
 	Name            string `json:"name" validate:"required"`
 	SeatsNumberLeft uint   `json:"seat_number_left" validate:"required"`
+}
+
+type BookDB struct {
+	ID         uint      `validate:"required"`
+	CreatedAt  time.Time `validate:"required"`
+	EventID    uint      `validate:"required"`
 }

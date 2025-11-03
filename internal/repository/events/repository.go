@@ -8,6 +8,7 @@ import (
 
 var (
 	ErrEventNotFound = errors.New("event not found")
+	ErrNoSeatsOrEventNotFound = errors.New("no seats left or event not found")
 	ErrBookNotFound  = errors.New("book not found")
 )
 

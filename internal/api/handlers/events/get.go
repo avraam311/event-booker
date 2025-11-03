@@ -1,12 +1,13 @@
 package events
 
 import (
-	// "errors"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/avraam311/event-booker/internal/api/handlers"
+	"github.com/avraam311/event-booker/internal/repository/events"
 
 	"github.com/wb-go/wbf/ginext"
 	"github.com/wb-go/wbf/zlog"
@@ -24,11 +25,11 @@ func (h *Handler) GetEventInfo(c *ginext.Context) {
 
 	ev, err := h.service.GetEventInfo(c.Request.Context(), id)
 	if err != nil {
-		// if errors.Is(err, events.ErrEventNotFound) {
-		// 	zlog.Logger.Warn().Err(err).Msg("event not found")
-		// 	handlers.Fail(c.Writer, http.StatusNotFound, fmt.Errorf("event not found"))
-		// 	return
-		// }
+		if errors.Is(err, events.ErrEventNotFound) {
+			zlog.Logger.Warn().Err(err).Msg("event not found")
+			handlers.Fail(c.Writer, http.StatusNotFound, fmt.Errorf("event not found"))
+			return
+		}
 
 		zlog.Logger.Error().Err(err).Msg("failed to get event")
 		handlers.Fail(c.Writer, http.StatusInternalServerError, fmt.Errorf("internal server error"))

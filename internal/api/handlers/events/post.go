@@ -2,12 +2,14 @@ package events
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/avraam311/event-booker/internal/api/handlers"
 	"github.com/avraam311/event-booker/internal/models"
+	"github.com/avraam311/event-booker/internal/repository/events"
 
 	"github.com/wb-go/wbf/ginext"
 	"github.com/wb-go/wbf/zlog"
@@ -62,11 +64,15 @@ func (h *Handler) BookSeat(c *ginext.Context) {
 
 	bookID, err := h.service.BookSeat(c.Request.Context(), id, &book)
 	if err != nil {
-		// if errors.Is(err, events.ErrEventNotFound) {
-		// 	zlog.Logger.Warn().Err(err).Msg("event not found")
-		// 	handlers.Fail(c.Writer, http.StatusNotFound, fmt.Errorf("event not found"))
-		// 	return
-		// }
+		if errors.Is(err, events.ErrEventNotFound) {
+			zlog.Logger.Warn().Err(err).Msg("event not found")
+			handlers.Fail(c.Writer, http.StatusNotFound, fmt.Errorf("event not found"))
+			return
+		} else if errors.Is(err, events.ErrNoSeatsOrEventNotFound) {
+			zlog.Logger.Warn().Err(err).Msg("no seats left or event not found")
+			handlers.Fail(c.Writer, http.StatusNotFound, fmt.Errorf("no seats left or event not found"))
+			return
+		}
 
 		zlog.Logger.Error().Err(err).Interface("book", book).Msg("failed to book seat")
 		handlers.Fail(c.Writer, http.StatusInternalServerError, fmt.Errorf("internal server error"))
@@ -88,11 +94,11 @@ func (h *Handler) Confirm(c *ginext.Context) {
 
 	err = h.service.Confirm(c.Request.Context(), id)
 	if err != nil {
-		// if errors.Is(err, events.ErrBookNotFound) {
-		// 	zlog.Logger.Warn().Err(err).Msg("book not found")
-		// 	handlers.Fail(c.Writer, http.StatusNotFound, fmt.Errorf("book not found"))
-		// 	return
-		// }
+		if errors.Is(err, events.ErrBookNotFound) {
+			zlog.Logger.Warn().Err(err).Msg("book not found")
+			handlers.Fail(c.Writer, http.StatusNotFound, fmt.Errorf("book not found"))
+			return
+		}
 
 		zlog.Logger.Error().Err(err).Interface("book", id).Msg("failed to confirm book")
 		handlers.Fail(c.Writer, http.StatusInternalServerError, fmt.Errorf("internal server error"))
