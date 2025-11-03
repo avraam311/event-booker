@@ -30,7 +30,7 @@ func (h *Handler) CreateEvent(c *ginext.Context) {
 
 	id, err := h.service.CreateEvent(c.Request.Context(), &ev)
 	if err != nil {
-		zlog.Logger.Error().Err(err).Interface("image", ev).Msg("failed to create event")
+		zlog.Logger.Error().Err(err).Interface("event", ev).Msg("failed to create event")
 		return
 	}
 
@@ -62,7 +62,14 @@ func (h *Handler) BookSeat(c *ginext.Context) {
 
 	bookID, err := h.service.BookSeat(c.Request.Context(), id, &book)
 	if err != nil {
+		// if errors.Is(err, events.ErrEventNotFound) {
+		// 	zlog.Logger.Warn().Err(err).Msg("event not found")
+		// 	handlers.Fail(c.Writer, http.StatusNotFound, fmt.Errorf("event not found"))
+		// 	return
+		// }
+
 		zlog.Logger.Error().Err(err).Interface("book", book).Msg("failed to book seat")
+		handlers.Fail(c.Writer, http.StatusInternalServerError, fmt.Errorf("internal server error"))
 		return
 	}
 
@@ -81,7 +88,14 @@ func (h *Handler) Confirm(c *ginext.Context) {
 
 	err = h.service.Confirm(c.Request.Context(), id)
 	if err != nil {
+		// if errors.Is(err, events.ErrBookNotFound) {
+		// 	zlog.Logger.Warn().Err(err).Msg("book not found")
+		// 	handlers.Fail(c.Writer, http.StatusNotFound, fmt.Errorf("book not found"))
+		// 	return
+		// }
+
 		zlog.Logger.Error().Err(err).Interface("book", id).Msg("failed to confirm book")
+		handlers.Fail(c.Writer, http.StatusInternalServerError, fmt.Errorf("internal server error"))
 		return
 	}
 
