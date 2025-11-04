@@ -33,6 +33,7 @@ func (h *Handler) CreateEvent(c *ginext.Context) {
 	id, err := h.service.CreateEvent(c.Request.Context(), &ev)
 	if err != nil {
 		zlog.Logger.Error().Err(err).Interface("event", ev).Msg("failed to create event")
+		handlers.Fail(c.Writer, http.StatusInternalServerError, fmt.Errorf("internal server error"))
 		return
 	}
 

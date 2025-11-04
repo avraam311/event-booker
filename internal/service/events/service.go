@@ -12,7 +12,7 @@ type Repository interface {
 	ChangeBookStatus(context.Context, uint) error
 	GetEvent(context.Context, uint) (*models.EventDB, error)
 	GetAllBooks(context.Context) ([]*models.BookDB, error)
-	DeleteBook(context.Context, uint) error
+	DeleteBook(context.Context, uint, uint) error
 }
 
 type Service struct {

@@ -8,4 +8,4 @@ db:
   conn_max_lifetime: 30m
 
 cron:
-  spec: "@every 1h"
+  spec: "@every 5m"

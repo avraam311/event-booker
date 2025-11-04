@@ -9,7 +9,7 @@ import (
 
 func (r *Repository) CreateEvent(ctx context.Context, ev *models.EventDTO) (uint, error) {
 	query := `
-		INSERT INTO event (name, seat_number, seats_number_left)
+		INSERT INTO event (name, seats_number, seats_number_left)
 		VALUES ($1, $2, $2)
 		RETURNING id;
 	`

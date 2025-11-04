@@ -9,7 +9,7 @@ import (
 
 func (r *Repository) GetAllBooks(ctx context.Context) ([]*models.BookDB, error) {
 	query := `
-		SELECT id, created_at, event_id
+		SELECT id, book, created_at, event_id
 		FROM book
 	`
 
@@ -22,7 +22,7 @@ func (r *Repository) GetAllBooks(ctx context.Context) ([]*models.BookDB, error) 
 	var books []*models.BookDB
 	for rows.Next() {
 		var b models.BookDB
-		err := rows.Scan(&b.ID, &b.CreatedAt, &b.EventID)
+		err := rows.Scan(&b.ID, &b.Book, &b.CreatedAt, &b.EventID)
 		if err != nil {
 			return nil, fmt.Errorf("repository/get_all_books.go - failed to scan book row - %w", err)
 		}

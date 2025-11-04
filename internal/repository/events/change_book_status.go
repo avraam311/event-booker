@@ -9,7 +9,7 @@ const (
 func (r *Repository) ChangeBookStatus(ctx context.Context, id uint) error {
 	query := `
 		UPDATE book
-		SET payment = $1
+		SET book = $1
 		WHERE id = $2;
 	`
 

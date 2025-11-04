@@ -6,7 +6,7 @@ COPY . .
 
 RUN go mod download
 
-RUN go build -o app ./cmd/cron/main.go
+RUN go build -o cron ./cmd/cron/main.go
 
 FROM alpine AS runner
 
